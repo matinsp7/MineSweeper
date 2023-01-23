@@ -2,9 +2,18 @@
 #include <iomanip>
 #include <unistd.h>
 #include <conio.h>
+#include <cstdlib>
 using namespace std;
 
 string message;
+int n;
+
+struct sdimension{
+	int x;
+	int y;
+};
+sdimension *bombs;
+
 void design(){
 	 system("cls");
     cout 
@@ -23,9 +32,9 @@ void design(){
 
 void startnewgame(){
 	system ("cls");
-	int n , count = 1;
+	int  count = 1;
 	cout << setw(20) << "* "<< "Enter the map dimension: ";
-	cin >> n;
+	//cin >> n; //dimenision of map 
 	system ("cls");
 	cout << endl << endl;
 	cout << setw(20);
@@ -44,6 +53,57 @@ void startnewgame(){
 	getch();
 }
 
+
+void creat_bomb (){
+	system ("cls");
+	cout << setw(20) << "* "<< "Enter the map dimension: ";
+	cin >> n;
+	bombs = new sdimension [(5*n)/2];
+	if (n>=5){
+		for (int i=0 ; i<(5*n)/2 ; i++){
+			bool flag = 0;
+			srand ((unsigned)time(0));
+			int x = rand()%n;
+			int y = rand ()%n;
+			for (int j=0 ; j<i ; j++){
+				if (x==bombs[j].x){
+					if (y==bombs[j].y){
+					flag = 1;
+					i--;
+					break;	
+					}
+				}
+			}
+			if (flag)
+			continue;
+			bombs[i].x = x;
+			bombs[i].y = y;
+		}
+	}
+}
+
+
+void creat_map(){
+	int map[n][n];
+	for (int i=0 ; i < n ; i++){
+		for (int j = 0 ; j<n ; j++){
+			map [i][j] = 0;
+		}
+	}
+	for (int i=0 ; i<(5*n)/2 ; i++){
+		map[bombs[i].x][bombs[i].y] = -50;
+	}
+	for (int i=0 ; i < n ; i++){
+		for (int j = 0 ; j<n ; j++){
+			cout << map[i][j] << '\t';
+		}
+		cout << endl;
+	}
+	getch();
+	
+}
+
+
 void results (){
 	cout << "Results";
 }
@@ -59,7 +119,8 @@ int main (){
 		cin >> input;
 		switch(input){
             case 1:
-            startnewgame();
+            creat_bomb();
+            creat_map();
             break;
             case 2:
             results();
